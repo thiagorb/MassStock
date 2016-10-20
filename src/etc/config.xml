@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Barcala_MassStock>
+            <version>1.0.0</version>
+        </Barcala_MassStock>
+    </modules>
+
+    <global>
+        <models>
+            <barcala_massstock>
+                <class>Barcala_MassStock_Model</class>
+            </barcala_massstock>
+        </models>
+    </global>
+
+    <frontend>
+        <routers>
+            <barcala_massstock>
+              <use>standard</use>
+              <args>
+                 <module>Barcala_MassStock</module>
+                <frontName>massstock</frontName>
+              </args>
+            </barcala_massstock>
+        </routers>
+    </frontend>
+</config>
