@@ -1,12 +1,12 @@
 # Comments are supported, begin a line with a hash
-src                      app/code/community/Barcala/MassStock/
+src                      app/code/community/Barcala/Massstock/
 # design                 app/design/frontend/base/default/mymodule/
 
 # Source and destination can have different names.
 # en_US.csv              app/locale/en_US/My_Module.csv
 
 # Destination file name is not required if the same as the source.
-Barcala_MassStock.xml          app/etc/modules/
+Barcala_Massstock.xml          app/etc/modules/
 
 # Leave out the destination entirely to assume the same path as the source.
 # lib/Somelib

@@ -1,8 +1,8 @@
 <config>
   <modules>
-    <Barcala_MassStock>
+    <Barcala_Massstock>
       <active>true</active>
       <codePool>community</codePool>
-    </Barcala_MassStock>
+    </Barcala_Massstock>
   </modules>
 </config>

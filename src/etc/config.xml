@@ -1,15 +1,15 @@
 <?xml version="1.0"?>
 <config>
     <modules>
-        <Barcala_MassStock>
+        <Barcala_Massstock>
             <version>1.0.0</version>
-        </Barcala_MassStock>
+        </Barcala_Massstock>
     </modules>
 
     <global>
         <models>
             <barcala_massstock>
-                <class>Barcala_MassStock_Model</class>
+                <class>Barcala_Massstock_Model</class>
             </barcala_massstock>
         </models>
     </global>
@@ -19,7 +19,7 @@
             <barcala_massstock>
               <use>standard</use>
               <args>
-                 <module>Barcala_MassStock</module>
+                 <module>Barcala_Massstock</module>
                 <frontName>massstock</frontName>
               </args>
             </barcala_massstock>

@@ -1,13 +1,13 @@
 <?php
 
-class Barcala_MassStock_TestController extends Mage_Core_Controller_Front_Action {
+class Barcala_Massstock_TestController extends Mage_Core_Controller_Front_Action {
     protected $_params;
 
     public function _construct()
     {
         $this->_params = [
-            'consumerKey'     => 'e156b1ab20c7e0c33dfcbb41af1378dc',
-            'consumerSecret'  => '674e35e1cc448f5a5a896785fddbc635',
+            'consumerKey'     => '5dbb7f32d520b62c271caca6ca2f24f1',
+            'consumerSecret'  => 'b6c2832d55bceb83efd6d8fb5315bdff',
             'callbackUrl'     => $this->_getBaseUrl() . 'massstock/test/callback',
             'siteUrl'         => $this->_getBaseUrl() . 'oauth',
             'requestTokenUrl' => $this->_getBaseUrl() . 'oauth/initiate',

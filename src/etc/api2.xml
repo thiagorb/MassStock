@@ -29,15 +29,15 @@
     <api2>
         <resource_groups>
             <barcala_massstock translate="title" module="api2">
-                <title>MassStock</title>
+                <title>Massstock</title>
                 <sort_order>1000</sort_order>
             </barcala_massstock>
         </resource_groups>
         <resources>
             <barcala_massstock translate="title" module="api2">
                 <group>barcala_massstock</group>
-                <model>barcala_massstock/api2_massStock</model>
-                <working_model>barcala_massstock/massStock</working_model>
+                <model>barcala_massstock/api2_massstock</model>
+                <working_model>barcala_massstock/massstock</working_model>
                 <title>Stock</title>
                 <privileges>
                     <admin>
