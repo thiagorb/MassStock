@@ -1,0 +1,5 @@
+<?php
+
+class Barcala_Massstock_Model_Api2_Massstock_Rest_Admin_V1 extends Barcala_Massstock_Model_Api2_Massstock_Rest
+{
+}
