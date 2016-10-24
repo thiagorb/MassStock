@@ -1,6 +1,6 @@
 <?php
 
-class Barcala_Massstock_Model_Api2_Massstock_Validator extends Mage_Api2_Model_Resource_Validator_Fields
+class Barcala_Massstock_Model_Api2_Massstock_Validator_Collection extends Mage_Api2_Model_Resource_Validator_Fields
 {
     const MAXIMUM_AMOUNT_ITEMS = 100;
 

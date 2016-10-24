@@ -11,8 +11,8 @@ abstract class Barcala_Massstock_Model_Api2_Massstock_Rest
     public function _multiUpdate(array $data)
     {
         try {
-            /* @var $validator Barcala_Massstock_Model_Api2_Massstock_Validator */
-            $validator = Mage::getModel('barcala_massstock/api2_massstock_validator', array(
+            /* @var $validator Barcala_Massstock_Model_Api2_Massstock_Validator_Collection */
+            $validator = Mage::getModel('barcala_massstock/api2_massstock_validator_collection', array(
                 'resource' => $this
             ));
 
