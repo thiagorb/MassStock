@@ -14,15 +14,15 @@ class Barcala_Massstock_Model_Api2_Massstock_Item_Loader
         $conditions = [];
 
         foreach ($data as $index => $itemData) {
-            if (!empty($itemData['item_id'])) {
+            if (isset($itemData['item_id'])) {
                 $conditions[] = $this->_makeCondition('item_id', $itemData['item_id']);
                 continue;
             }
 
-            if (empty($itemData['stock_id'])) {
-                $stockId = Mage_CatalogInventory_Model_Stock::DEFAULT_STOCK_ID;
-            } else {
+            if (isset($itemData['stock_id'])) {
                 $stockId = $itemData['stock_id'];
+            } else {
+                $stockId = Mage_CatalogInventory_Model_Stock::DEFAULT_STOCK_ID;
             }
 
             $conditions[] = $this->_conjunction([

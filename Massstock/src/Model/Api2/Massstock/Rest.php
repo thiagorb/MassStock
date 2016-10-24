@@ -44,9 +44,10 @@ extends Barcala_Massstock_Model_Api2_Massstock
                 );
             }
         } catch (Exception $e) {
+            throw $e;
             $this->_errorMessage(
-                Mage_Api2_Massstock_Model_Resource::RESOURCE_INTERNAL_ERROR,
-                Mage_Api2_Massstock_Model_Server::HTTP_INTERNAL_ERROR
+                Mage_Api2_Model_Resource::RESOURCE_INTERNAL_ERROR,
+                Mage_Api2_Model_Server::HTTP_INTERNAL_ERROR
             );
         }
     }
