@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<config>
+    <modules>
+        <Barcala_CsvAdapter>
+            <version>1.0.0</version>
+        </Barcala_CsvAdapter>
+    </modules>
+
+    <global>
+        <models>
+            <barcala_csvadapter>
+                <class>Barcala_CsvAdapter_Model</class>
+            </barcala_csvadapter>
+        </models>
+
+        <api2>
+            <request>
+                <interpreters>
+                    <!-- CSV -->
+                    <text_csv>
+                        <type>text/csv</type>
+                        <model>barcala_csvadapter/request_interpreter_csv</model>
+                    </text_csv>
+                </interpreters>
+            </request>
+        </api2>
+    </global>
+</config>

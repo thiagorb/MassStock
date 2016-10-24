@@ -75,5 +75,26 @@ class Barcala_Massstock_TestController extends Mage_Core_Controller_Front_Action
         $response = $restClient->request();
         var_export($response);
     }
- 
+
+    public function callCsvAction()
+    {
+        /* @var Zend_Oauth_Token_Access $accessToken */
+        $accessToken = $this->_restoreAccessToken();
+
+        if (!$accessToken) {
+            return $this->_redirect('massstock/test/index');
+        }
+
+        $restClient = $accessToken->getHttpClient($this->_params);
+        $restClient->setUri($this->_getBaseUrl() . 'api/rest/customstockitems');
+        $restClient->setHeaders('Accept', 'application/json');
+        $restClient->setHeaders('Content-Type', 'text/csv');
+        $restClient->setHeaders('Content-Delimiter', ';');
+        $restClient->setMethod(Zend_Http_Client::PUT);
+        $restClient->setRawData('item_id;qty
+366;200');
+
+        $response = $restClient->request();
+        Zend_Debug::dump($response);
+    }
 }
