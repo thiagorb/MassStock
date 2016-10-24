@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<config>
+    <api2>
+        <resource_groups>
+            <barcala_massstock translate="title" module="barcala_massstock">
+                <title>Massstock</title>
+                <sort_order>1000</sort_order>
+            </barcala_massstock>
+        </resource_groups>
+        <resources>
+            <barcala_massstock translate="title" module="barcala_massstock">
+                <group>barcala_massstock</group>
+                <model>barcala_massstock/api2_massstock</model>
+                <title>Stock</title>
+                <privileges>
+                    <admin>
+                        <update>1</update>
+                    </admin>
+                </privileges>
+                <attributes translate="item_id stock_id product_id qty" module="barcala_massstock">
+                    <item_id>Item ID</item_id>
+                    <stock_id>Stock ID</stock_id>
+                    <product_id>Product ID</product_id>
+                    <qty>Qty</qty>
+                </attributes>
+                <routes>
+                    <route_entity>
+                        <route>/customstockitems/</route>
+                        <action_type>collection</action_type>
+                    </route_entity>
+                </routes>
+                <versions>1</versions>
+            </barcala_massstock>
+        </resources>
+    </api2>
+</config>
