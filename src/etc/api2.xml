@@ -37,7 +37,6 @@
             <barcala_massstock translate="title" module="api2">
                 <group>barcala_massstock</group>
                 <model>barcala_massstock/api2_massstock</model>
-                <working_model>barcala_massstock/massstock</working_model>
                 <title>Stock</title>
                 <privileges>
                     <admin>

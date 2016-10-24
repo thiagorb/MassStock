@@ -4,7 +4,7 @@ class Barcala_Massstock_Model_Api2_Massstock_Validator_Collection extends Mage_A
 {
     const MAXIMUM_AMOUNT_ITEMS = 100;
 
-    public function isValidData(array $data)
+    public function isValidCollection(array $data)
     {
         if (count($data) > self::MAXIMUM_AMOUNT_ITEMS) {
             $this->_addError('Maximum amount of items exceeded');
@@ -16,7 +16,7 @@ class Barcala_Massstock_Model_Api2_Massstock_Validator_Collection extends Mage_A
                 'resource' => $this->_resource
             ]);
 
-            $validator->isValidData($itemData);
+            $validator->isValidItem($itemData);
 
             $itemErrors = array_map(
                 function ($itemError) use ($index) {
