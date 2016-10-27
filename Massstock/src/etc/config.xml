@@ -13,16 +13,4 @@
             </barcala_massstock>
         </models>
     </global>
-
-    <frontend>
-        <routers>
-            <barcala_massstock>
-              <use>standard</use>
-              <args>
-                 <module>Barcala_Massstock</module>
-                <frontName>massstock</frontName>
-              </args>
-            </barcala_massstock>
-        </routers>
-    </frontend>
 </config>

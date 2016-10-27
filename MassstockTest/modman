@@ -1,0 +1,4 @@
+src/                      app/code/community/Barcala/MassstockTest/
+Barcala_MassstockTest.xml app/etc/modules/
+
+@shell                    rm -rf $PROJECT/var/cache/*

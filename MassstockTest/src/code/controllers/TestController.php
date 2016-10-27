@@ -1,6 +1,9 @@
 <?php
 
-class Barcala_Massstock_TestController extends Mage_Core_Controller_Front_Action {
+class Barcala_MassstockTest_TestController extends Mage_Core_Controller_Front_Action {
+	/**
+	 * @var array
+	 */
     protected $_params;
 
     public function _construct()
@@ -16,26 +19,59 @@ class Barcala_Massstock_TestController extends Mage_Core_Controller_Front_Action
         ];
     }
 
+    /**
+     * Store request token
+     *
+     * @param Zend_Oauth_Token_Request $token
+     */
     protected function _storeRequestToken($token)
     {
         Mage::getSingleton('core/session')->setRequestToken(serialize($token));
     }
 
+    /**
+     * Retrieve stored request token
+     *
+     * @return Zend_Oauth_Token_Request
+     */
     protected function _restoreRequestToken()
     {
         return unserialize(Mage::getSingleton('core/session')->getRequestToken());
     }
 
+    /**
+     * Forget stored request token
+     */
+    protected function _forgetRequestToken()
+    {
+        Mage::getSingleton('core/session')->unsetRequestToken();
+    }
+
+    /**
+     * Store access token
+     *
+     * @param Zend_Oauth_Token_Access $token
+     */
     protected function _storeAccessToken($token)
     {
         Mage::getSingleton('core/session')->setAccessToken(serialize($token));
     }
 
+    /**
+     * Retrieve stored access token
+     *
+     * @return Zend_Oauth_Token_Access
+     */
     protected function _restoreAccessToken()
     {
         return unserialize(Mage::getSingleton('core/session')->getAccessToken());
     }
 
+    /**
+     * Get Magento base url
+     *
+     * @return string
+     */
     protected function _getBaseUrl()
     {
         return Mage::getUrl();
