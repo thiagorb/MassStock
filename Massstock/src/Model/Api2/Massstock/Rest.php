@@ -1,9 +1,6 @@
 <?php
 
-Mage::setIsDeveloperMode(true);
-ini_set('display_errors', 1);
-
-abstract class Barcala_Massstock_Model_Api2_Massstock_Rest 
+abstract class Barcala_Massstock_Model_Api2_Massstock_Rest
 extends Barcala_Massstock_Model_Api2_Massstock
 {
     /**
@@ -14,7 +11,7 @@ extends Barcala_Massstock_Model_Api2_Massstock
     public function _multiUpdate(array $data)
     {
         try {
-            /* @var $validator Barcala_Massstock_Model_Api2_Massstock_Validator_Collection */
+            /** @var Barcala_Massstock_Model_Api2_Massstock_Validator_Collection $validator */
             $validator = Mage::getModel('barcala_massstock/api2_massstock_validator_collection', array(
                 'resource' => $this
             ));
@@ -23,9 +20,11 @@ extends Barcala_Massstock_Model_Api2_Massstock
                 return $this->_fail($validator->getErrors());
             }
 
+            /** @var Barcala_Massstock_Model_Api2_Massstock_Item_Loader $itemLoader */
             $itemLoader = Mage::getModel('barcala_massstock/api2_massstock_item_loader');
             $loadedItems = $itemLoader->load($data);
 
+            /** @var Barcala_Massstock_Model_Api2_Massstock_Item_Mapper $itemMapper */
             $itemMapper = Mage::getModel('barcala_massstock/api2_massstock_item_mapper');
             $mapItemQty = $itemMapper->map($data, $loadedItems);
 
@@ -33,6 +32,7 @@ extends Barcala_Massstock_Model_Api2_Massstock
                 return $this->_fail($itemMapper->getErrors());
             }
 
+            /** @var Mage_Core_Model_Resource $resource */
             $resource = Mage::getSingleton('core/resource');
             $connection = $resource->getConnection('core_write');
             $table = $resource->getTableName('cataloginventory/stock_item');
@@ -52,6 +52,11 @@ extends Barcala_Massstock_Model_Api2_Massstock
         }
     }
 
+    /**
+     * Fail with given errors
+     *
+     * @param string[] $errors
+     */
     protected function _fail($errors)
     {
         foreach ($errors as $error) {

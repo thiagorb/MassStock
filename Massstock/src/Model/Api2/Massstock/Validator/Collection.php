@@ -4,6 +4,12 @@ class Barcala_Massstock_Model_Api2_Massstock_Validator_Collection extends Mage_A
 {
     const MAXIMUM_AMOUNT_ITEMS = 100;
 
+    /**
+     * Validate collection of items from the request
+     *
+     * @param array $data Request data
+     * @return boolean
+     */
     public function isValidCollection(array $data)
     {
         if (count($data) > self::MAXIMUM_AMOUNT_ITEMS) {
@@ -11,7 +17,7 @@ class Barcala_Massstock_Model_Api2_Massstock_Validator_Collection extends Mage_A
         }
 
         foreach ($data as $index => $itemData) {
-            /* @var $validator Barcala_Massstock_Model_Api2_Massstock_Validator_Item */
+            /** @var $validator Barcala_Massstock_Model_Api2_Massstock_Validator_Item */
             $validator = Mage::getModel('barcala_massstock/api2_massstock_validator_item', [
                 'resource' => $this->_resource
             ]);

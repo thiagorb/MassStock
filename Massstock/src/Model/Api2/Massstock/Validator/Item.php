@@ -2,6 +2,12 @@
 
 class Barcala_Massstock_Model_Api2_Massstock_Validator_Item extends Mage_Api2_Model_Resource_Validator_Fields
 {
+    /**
+     * Validate an item from the request
+     *
+     * @param array $data Item data
+     * @return boolean
+     */
     public function isValidItem(array $data)
     {
         if (isset($data['item_id'])) {

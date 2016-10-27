@@ -21,7 +21,7 @@ class Barcala_CsvAdapter_Model_Request_Interpreter_Csv implements Mage_Api2_Mode
             $enclosure = $this->_getEnclosure();
             $escape = $this->_getEscape();
             $lines = preg_split('/\r?\n/', $body);
-            
+
             if ($this->_hasHeader()) {
                 $headers = str_getcsv(array_shift($lines), $delimiter, $enclosure, $escape);
             }
