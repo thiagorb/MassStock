@@ -1,24 +1,6 @@
 <?php
 
 class Barcala_MassstockTest_TestController extends Mage_Core_Controller_Front_Action {
-	/**
-	 * @var array
-	 */
-    protected $_params;
-
-    public function _construct()
-    {
-        $this->_params = [
-            'consumerKey'     => '5dbb7f32d520b62c271caca6ca2f24f1',
-            'consumerSecret'  => 'b6c2832d55bceb83efd6d8fb5315bdff',
-            'callbackUrl'     => $this->_getBaseUrl() . 'massstock/test/callback',
-            'siteUrl'         => $this->_getBaseUrl() . 'oauth',
-            'requestTokenUrl' => $this->_getBaseUrl() . 'oauth/initiate',
-            'authorizeUrl'    => $this->_getBaseUrl() . 'admin/oauth_authorize',
-            'accessTokenUrl'  => $this->_getBaseUrl() . 'oauth/token'
-        ];
-    }
-
     /**
      * Store request token
      *
@@ -32,7 +14,7 @@ class Barcala_MassstockTest_TestController extends Mage_Core_Controller_Front_Ac
     /**
      * Retrieve stored request token
      *
-     * @return Zend_Oauth_Token_Request
+     * @return Zend_Oauth_Token_Request|null
      */
     protected function _restoreRequestToken()
     {
@@ -44,7 +26,7 @@ class Barcala_MassstockTest_TestController extends Mage_Core_Controller_Front_Ac
      */
     protected function _forgetRequestToken()
     {
-        Mage::getSingleton('core/session')->unsetRequestToken();
+        Mage::getSingleton('core/session')->setRequestToken(null);
     }
 
     /**
@@ -60,11 +42,39 @@ class Barcala_MassstockTest_TestController extends Mage_Core_Controller_Front_Ac
     /**
      * Retrieve stored access token
      *
-     * @return Zend_Oauth_Token_Access
+     * @return Zend_Oauth_Token_Access|null
      */
     protected function _restoreAccessToken()
     {
         return unserialize(Mage::getSingleton('core/session')->getAccessToken());
+    }
+
+    /**
+     * Forget stored access token
+     */
+    protected function _forgetAccessToken()
+    {
+        Mage::getSingleton('core/session')->setAccessToken(null);
+    }
+
+    /**
+     * Store consumer data
+     *
+     * @param array $consumerData
+     */
+    protected function _storeConsumerData($consumerData)
+    {
+        Mage::getSingleton('core/session')->setConsumerData(serialize($consumerData));
+    }
+
+    /**
+     * Retrieve stored consumer data
+     *
+     * @return array|null
+     */
+    protected function _restoreConsumerData()
+    {
+        return unserialize(Mage::getSingleton('core/session')->getConsumerData());
     }
 
     /**
@@ -78,59 +88,124 @@ class Barcala_MassstockTest_TestController extends Mage_Core_Controller_Front_Ac
     }
 
     public function indexAction() {
-        $consumer = new Zend_Oauth_Consumer($this->_params);
-        $requestToken = $consumer->getRequestToken();
-        $this->_storeRequestToken($requestToken);
-        $consumer->redirect();
+    	$consumerData = $this->_restoreConsumerData();
+    	
+    	if (!$consumerData) {
+    		return $this->_redirect('massstock/test/consumer');
+    	}
+    	
+        $accessToken = $this->_restoreAccessToken();
+        
+        if (!$accessToken) {
+            $consumer = new Zend_Oauth_Consumer($this->_getParams());
+            $requestToken = $consumer->getRequestToken();
+            $this->_storeRequestToken($requestToken);
+            return $consumer->redirect();
+        }
+    
+        $this->loadLayout();
+        $this->renderLayout();
     }
 
     public function callbackAction()
     {
-        $consumer = new Zend_Oauth_Consumer($this->_params);
+        $consumer = new Zend_Oauth_Consumer($this->_getParams());
         $accessToken = $consumer->getAccessToken($_GET, $this->_restoreRequestToken());
         $this->_storeAccessToken($accessToken);
-        return $this->_redirect('massstock/test/call');
+        return $this->_redirect('massstock/test');
+    }
+    
+    public function consumerAction()
+    {
+    	if (
+   			!$this->getRequest()->isPost() || 
+   			empty($this->getRequest()->getPost('consumer_key')) || 
+   			empty($this->getRequest()->getPost('consumer_secret'))
+    	) {
+    		return $this->loadLayout()->renderLayout();
+    	}
+    	
+    	$this->_storeConsumerData([
+    		'consumerKey'    => $this->getRequest()->getPost('consumer_key'),
+    		'consumerSecret' => $this->getRequest()->getPost('consumer_secret'),
+    	]);
+    	
+    	$this->_forgetRequestToken();
+    	$this->_forgetAccessToken();
+    	
+    	return $this->_redirect('massstock/test');
+    }
+    
+    protected function _ajaxRequest()
+    {
+    	$accessToken = $this->_restoreAccessToken();
+    	
+    	if (!$accessToken) {
+    		return [
+    			'error' => 'Access token is no longer valid'
+    		];
+    	}
+    	
+    	$requestContent = $this->getRequest()->getPost('request_content');
+    	if (!$requestContent) {
+    		return [
+    			'error' => 'Request body cannot be empty'
+    		];
+    	}
+    	
+    	$contentType = $this->getRequest()->getPost('content_type');
+    	if (array_search($contentType, ['application/json', 'text/csv']) === false) {
+    		return [
+    			'error' => 'Content type is not valid'
+    		];
+    	}
+    	
+    	$restClient = $accessToken->getHttpClient($this->_getParams());
+    	$restClient->setUri($this->_getBaseUrl() . 'api/rest/customstockitems');
+    	$restClient->setHeaders('Accept', 'application/json');
+    	$restClient->setHeaders('Content-Type', $contentType);
+    	if ($contentType == 'text/csv') {
+    		$restClient->setHeaders('Content-Delimiter', ';');
+    	}
+    	$restClient->setMethod(Zend_Http_Client::PUT);
+    	$restClient->setRawData($requestContent);
+    	
+    	$response = $restClient->request()->getBody();
+    	
+    	/*
+    	Mage::log(
+    			[
+    				'request' => $requestContent,
+    				'response' => $response
+    			],
+    			null,
+    			'ajax_requests.log',
+    			true
+    			);
+    	*/
+    	
+    	return [
+    		'response' => json_decode($response)
+    	];
     }
 
-    public function callAction()
+    public function callAjaxAction()
     {
-        /* @var Zend_Oauth_Token_Access $accessToken */
-        $accessToken = $this->_restoreAccessToken();
-
-        if (!$accessToken) {
-            return $this->_redirect('massstock/test/index');
-        }
-
-        $restClient = $accessToken->getHttpClient($this->_params);
-        $restClient->setUri($this->_getBaseUrl() . 'api/rest/customstockitems');
-        $restClient->setHeaders('Accept', 'application/json');
-        $restClient->setHeaders('Content-Type', 'application/json');
-        $restClient->setMethod(Zend_Http_Client::PUT);
-        $restClient->setRawData('[{"item_id":"366","qty":17},{"item_id":"367","qty":103},{"item_id":"368","qty":27},{"item_id":"369","qty":28},{"item_id":"370","qty":28},{"item_id":"371","qty":203},{"item_id":"372","qty":25},{"item_id":"373","qty":28},{"item_id":"374","qty":28},{"item_id":"375","qty":3},{"item_id":"376","qty":28},{"item_id":"377","qty":28},{"item_id":"378","qty":8},{"item_id":"379","qty":27},{"item_id":"380","qty":26},{"item_id":"381","qty":28},{"item_id":"382","qty":28},{"item_id":"383","qty":28},{"item_id":"384","qty":303},{"item_id":"385","qty":26},{"item_id":"386","qty":28},{"item_id":"387","qty":28},{"item_id":"388","qty":16},{"item_id":"389","qty":27},{"item_id":"390","qty":28},{"item_id":"391","qty":28},{"item_id":"392","qty":28},{"item_id":"393","qty":28},{"item_id":"394","qty":28},{"item_id":"395","qty":27},{"item_id":"396","qty":28},{"item_id":"397","qty":28},{"item_id":"398","qty":28},{"item_id":"402","qty":21},{"item_id":"403","qty":18},{"item_id":"404","qty":28},{"item_id":"405","qty":28},{"item_id":"406","qty":28},{"item_id":"407","qty":28},{"item_id":"408","qty":28},{"item_id":"409","qty":28},{"item_id":"410","qty":13},{"item_id":"411","qty":28},{"item_id":"412","qty":28},{"item_id":"413","qty":28},{"item_id":"414","qty":28},{"item_id":"415","qty":28},{"item_id":"416","qty":28},{"item_id":"417","qty":28},{"item_id":"418","qty":28},{"item_id":"419","qty":14},{"item_id":"420","qty":-3},{"item_id":"421","qty":10},{"item_id":"422","qty":10},{"item_id":"423","qty":27},{"item_id":"424","qty":28},{"item_id":"425","qty":28},{"item_id":"426","qty":13},{"item_id":"427","qty":27},{"item_id":"428","qty":27},{"item_id":"429","qty":13},{"item_id":"430","qty":24},{"item_id":"431","qty":26},{"item_id":"432","qty":27},{"item_id":"433","qty":28},{"item_id":"434","qty":28},{"item_id":"435","qty":28},{"item_id":"436","qty":28},{"item_id":"437","qty":27},{"item_id":"438","qty":28},{"item_id":"439","qty":28},{"item_id":"440","qty":27},{"item_id":"441","qty":28},{"item_id":"442","qty":28},{"item_id":"443","qty":28},{"item_id":"444","qty":28},{"item_id":"445","qty":22},{"item_id":"446","qty":-7},{"item_id":"447","qty":16},{"item_id":"448","qty":27},{"item_id":"449","qty":27},{"item_id":"460","qty":28},{"item_id":"461","qty":28},{"item_id":"462","qty":28},{"item_id":"463","qty":28},{"item_id":"464","qty":28},{"item_id":"472","qty":10},{"item_id":"473","qty":22},{"item_id":"474","qty":28},{"item_id":"475","qty":28},{"item_id":"476","qty":27},{"item_id":"477","qty":27},{"item_id":"478","qty":28},{"item_id":"479","qty":28},{"item_id":"480","qty":28},{"item_id":"481","qty":9},{"item_id":"482","qty":28},{"item_id":"483","qty":28},{"item_id":"484","qty":28},{"item_id":"485","qty":28}]');
-
-        $response = $restClient->request();
-        Zend_Debug::dump($response);
+		$response = $this->_ajaxRequest();
+		$this->getResponse()->setBody(json_encode($response));
     }
-
-    public function callCsvAction()
+    
+    protected function _getParams()
     {
-        /* @var Zend_Oauth_Token_Access $accessToken */
-        $accessToken = $this->_restoreAccessToken();
-
-        if (!$accessToken) {
-            return $this->_redirect('massstock/test/index');
-        }
-
-        $restClient = $accessToken->getHttpClient($this->_params);
-        $restClient->setUri($this->_getBaseUrl() . 'api/rest/customstockitems');
-        $restClient->setHeaders('Accept', 'application/json');
-        $restClient->setHeaders('Content-Type', 'text/csv');
-        $restClient->setHeaders('Content-Delimiter', ';');
-        $restClient->setMethod(Zend_Http_Client::PUT);
-        $restClient->setRawData('item_id;qty
-366;200');
-
-        $response = $restClient->request();
-        Zend_Debug::dump($response);
+		return array_merge(
+			[
+    			'callbackUrl'     => $this->_getBaseUrl() . 'massstock/test/callback',
+    			'siteUrl'         => $this->_getBaseUrl() . 'oauth',
+    			'requestTokenUrl' => $this->_getBaseUrl() . 'oauth/initiate',
+    			'authorizeUrl'    => $this->_getBaseUrl() . 'admin/oauth_authorize',
+    			'accessTokenUrl'  => $this->_getBaseUrl() . 'oauth/token'
+    		],
+			$this->_restoreConsumerData()
+		);
     }
 }

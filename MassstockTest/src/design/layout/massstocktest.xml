@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<layout>
+    <barcala_massstocktest_test_index>
+        <update handle="page_one_column" />
+        
+        <reference name="content">
+            <block type="core/template" name="massstock_form" as="massstock_form" template="massstocktest/form.phtml">
+            </block>
+        </reference>
+    </barcala_massstocktest_test_index>
+    
+    <barcala_massstocktest_test_consumer>
+        <update handle="page_one_column" />
+        
+        <reference name="content">
+            <block type="core/template" name="massstock_form" as="massstock_form" template="massstocktest/consumer.phtml">
+            </block>
+        </reference>
+    </barcala_massstocktest_test_consumer>
+</layout>

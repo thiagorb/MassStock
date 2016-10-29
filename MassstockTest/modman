@@ -1,4 +1,6 @@
-src/                      app/code/community/Barcala/MassstockTest/
+src/code                  app/code/community/Barcala/MassstockTest/
+src/design/layout         app/design/frontend/base/default/layout/massstocktest/
+src/design/template       app/design/frontend/base/default/template/massstocktest/
 Barcala_MassstockTest.xml app/etc/modules/
 
 @shell                    rm -rf $PROJECT/var/cache/*
