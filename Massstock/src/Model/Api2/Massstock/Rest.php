@@ -59,9 +59,15 @@ extends Barcala_Massstock_Model_Api2_Massstock
                 );
             }
 
-            Mage::getResourceSingleton('cataloginventory/stock')->updateSetOutOfStock();
-            Mage::getResourceSingleton('cataloginventory/stock')->updateSetInStock();
-            Mage::getResourceSingleton('cataloginventory/stock')->updateLowStockDate();
+            /** @var Mage_CatalogInventory_Model_Resource_Stock $stockResource */
+            $stockResource = Mage::getResourceSingleton('cataloginventory/stock');
+            $stockResource->updateSetOutOfStock();
+            $stockResource->updateSetInStock();
+            $stockResource->updateLowStockDate();
+            
+            /** @var Mage_Index_Model_Process $process */
+            $process = Mage::getModel('index/indexer')->getProcessByCode('cataloginventory_stock');
+            $process->reindexAll();
         } catch (Exception $e) {
             throw $e;
             $this->_errorMessage(
