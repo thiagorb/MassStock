@@ -16,13 +16,15 @@
             
             <label>Example Request</label>
             <br />
-            <?php foreach ($this->getExampleRequests() as $label => $request): ?>
-                <button data-request-button="<?php echo $label ?>" class="button">
-                    <span><span><?php echo $label ?></span></span>
-                </button>
-            <?php endforeach; ?>
-            <br />
-            <br />
+            <ul class="example-requests">
+                <?php foreach ($this->getExampleRequests() as $label => $request): ?>
+                <li>
+                    <button data-request-button="<?php echo $label ?>" class="button">
+                        <span><span><?php echo $label ?></span></span>
+                    </button>
+                </li>
+                <?php endforeach; ?>
+            </ul>
             
             <label>Request Content</label>
             <br />

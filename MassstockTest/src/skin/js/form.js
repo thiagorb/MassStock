@@ -85,7 +85,7 @@ jQuery(function ($) {
             try {
                 restResponse = JSON.parse(ajaxResponse.response);
             } catch (e) {
-                return addResponse('Unable to parse response', 'response--error', restResponse);
+                return addResponse('Unable to parse response', 'response--error', ajaxResponse.response);
             }
             
             if (restResponse && hasRestError(restResponse)) {
