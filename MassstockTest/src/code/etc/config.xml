@@ -1,21 +1,21 @@
 <?xml version="1.0"?>
 <config>
-	<modules>
-		<Barcala_MassstockTest>
-			<version>1.0.0</version>
-		</Barcala_MassstockTest>
-	</modules>
+    <modules>
+        <Barcala_MassstockTest>
+            <version>1.0.0</version>
+        </Barcala_MassstockTest>
+    </modules>
 
-	<frontend>
-		<routers>
-			<barcala_massstocktest>
-				<use>standard</use>
-				<args>
-					<module>Barcala_MassstockTest</module>
-					<frontName>massstock</frontName>
-				</args>
-			</barcala_massstocktest>
-		</routers>
+    <frontend>
+        <routers>
+            <barcala_massstocktest>
+                <use>standard</use>
+                <args>
+                    <module>Barcala_MassstockTest</module>
+                    <frontName>massstock</frontName>
+                </args>
+            </barcala_massstocktest>
+        </routers>
 
         <layout>
             <updates>
@@ -24,5 +24,5 @@
                 </barcala_massstocktest>
             </updates>
         </layout>
-	</frontend>
+    </frontend>
 </config>

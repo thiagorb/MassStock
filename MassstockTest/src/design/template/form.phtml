@@ -1,74 +1,74 @@
 <?php
-	/** @var Mage_CatalogInventory_Model_Resource_Stock_Item_Collection $items */
-	$items = Mage::getResourceModel('cataloginventory/stock_item_collection');
-	$items->setPageSize(100)->setCurPage(1);
-	
-	$serializableItems = [];
-	foreach ($items as $item) {
-		$serializableItems[] = [
-			'item_id' => $item->getId(),
-			'qty' => $item->getQty()
-		];
-	}
+    /** @var Mage_CatalogInventory_Model_Resource_Stock_Item_Collection $items */
+    $items = Mage::getResourceModel('cataloginventory/stock_item_collection');
+    $items->setPageSize(100)->setCurPage(1);
+    
+    $serializableItems = [];
+    foreach ($items as $item) {
+        $serializableItems[] = [
+            'item_id' => $item->getId(),
+            'qty' => $item->getQty()
+        ];
+    }
 
-	$exampleRequests = [
-		'1 Item by Product ID' => [ 
-			[
-				'product_id' => $item->getProductId(),
-				'stock_id' => $item->getStockId(),
-				'qty' => $item->getQty()
-			]
-		],
-		'1 Item by Item ID' => [
-			[
-				'item_id' => $item->getId(),
-				'qty' => $item->getQty()
-			]
-		],
-		'100 Items' => $serializableItems
-	];
+    $exampleRequests = [
+        '1 Item by Product ID' => [ 
+            [
+                'product_id' => $item->getProductId(),
+                'stock_id' => $item->getStockId(),
+                'qty' => $item->getQty()
+            ]
+        ],
+        '1 Item by Item ID' => [
+            [
+                'item_id' => $item->getId(),
+                'qty' => $item->getQty()
+            ]
+        ],
+        '100 Items' => $serializableItems
+    ];
 ?>
 
 <div class="content-row">
-	<div class="content-column content-column--1">
-		<form id="request_form" action="<?php echo Mage::getUrl('massstock/test/callAjax') ?>" method="post">
-			<label>Content Type</label>
-			<br />
-			<select name="content_type">
-				<option value="text/csv">CSV</option>
-				<option value="application/json">JSON</option>
-			</select>
-			<br />
-			<br />
-			
-			<label>Example Request</label>
-			<br />
-			<?php foreach ($exampleRequests as $label => $request): ?>
-				<button data-request-button="<?php echo $label ?>" class="button">
-					<span><span><?php echo $label ?></span></span>
-				</button>
-			<?php endforeach; ?>
-			<br />
-			<br />
-			
-			<label>Request Content</label>
-			<br />
-			<textarea name="request_content"></textarea>
-			<br />
-			
-			<br />
-			<button class="button" id="submit_buton">
-				<span><span>Submit</span></span>
-			</button>
-		</form>
-	</div>
-	<div class="content-column content-column--2">
-		<h2>Responses</h2>
-		<ul class="response-list">
-		</ul>
-	</div>
+    <div class="content-column content-column--1">
+        <form id="request_form" action="<?php echo Mage::getUrl('massstock/test/callAjax') ?>" method="post">
+            <label>Content Type</label>
+            <br />
+            <select name="content_type">
+                <option value="text/csv">CSV</option>
+                <option value="application/json">JSON</option>
+            </select>
+            <br />
+            <br />
+            
+            <label>Example Request</label>
+            <br />
+            <?php foreach ($exampleRequests as $label => $request): ?>
+                <button data-request-button="<?php echo $label ?>" class="button">
+                    <span><span><?php echo $label ?></span></span>
+                </button>
+            <?php endforeach; ?>
+            <br />
+            <br />
+            
+            <label>Request Content</label>
+            <br />
+            <textarea name="request_content"></textarea>
+            <br />
+            
+            <br />
+            <button class="button" id="submit_buton">
+                <span><span>Submit</span></span>
+            </button>
+        </form>
+    </div>
+    <div class="content-column content-column--2">
+        <h2>Responses</h2>
+        <ul class="response-list">
+        </ul>
+    </div>
 </div>
 
 <script type="application/json" id="example-requests">
-	<?php echo json_encode($exampleRequests) ?>
+    <?php echo json_encode($exampleRequests) ?>
 </script>

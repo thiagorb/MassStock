@@ -1,8 +1,8 @@
 <config>
-  <modules>
-    <Barcala_CsvAdapter>
-      <active>true</active>
-      <codePool>community</codePool>
-    </Barcala_CsvAdapter>
-  </modules>
+    <modules>
+        <Barcala_CsvAdapter>
+            <active>true</active>
+            <codePool>community</codePool>
+        </Barcala_CsvAdapter>
+    </modules>
 </config>

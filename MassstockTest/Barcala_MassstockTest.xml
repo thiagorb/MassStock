@@ -1,11 +1,11 @@
 <config>
-  <modules>
-    <Barcala_MassstockTest>
-      <active>true</active>
-      <codePool>community</codePool>
-      <depends>
-        <Barcala_Massstock />
-      </depends>
-    </Barcala_MassstockTest>
-  </modules>
+    <modules>
+        <Barcala_MassstockTest>
+            <active>true</active>
+            <codePool>community</codePool>
+            <depends>
+                <Barcala_Massstock />
+            </depends>
+        </Barcala_MassstockTest>
+    </modules>
 </config>

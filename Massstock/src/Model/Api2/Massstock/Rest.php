@@ -37,12 +37,12 @@ extends Barcala_Massstock_Model_Api2_Massstock
             $connection = $resource->getConnection('core_write');
             $table = $resource->getTableName('cataloginventory/stock_item');
             foreach ($mapItemQty as $itemQty) {
-            	/** @var Mage_CatalogInventory_Model_Stock_Item $item */
-            	$item = $itemQty['item'];
+                /** @var Mage_CatalogInventory_Model_Stock_Item $item */
+                $item = $itemQty['item'];
 
-            	/** @var int|float|string $qty */
-            	$qty = $itemQty['qty'];
-            	
+                /** @var int|float|string $qty */
+                $qty = $itemQty['qty'];
+                
                 $connection->update(
                     $table,
                     ['qty' => $itemQty['qty']],
@@ -50,12 +50,12 @@ extends Barcala_Massstock_Model_Api2_Massstock
                 );
 
                 $this->_successMessage(
-                	sprintf(
-                		'Updated quantity of stock item with ID %s to %s', 
-                		$item->getId(),
-                		$qty
-                	),
-                	self::RESOURCE_UPDATED_SUCCESSFUL
+                    sprintf(
+                        'Updated quantity of stock item with ID %s to %s', 
+                        $item->getId(),
+                        $qty
+                    ),
+                    self::RESOURCE_UPDATED_SUCCESSFUL
                 );
             }
 
