@@ -81,6 +81,10 @@ jQuery(function ($) {
             'method': $('#request_form').attr('method'),
             'dataType': 'json'
         }).done(function (ajaxResponse) {
+            if (ajaxResponse.error) {
+                return addResponse('AJAX error', 'response--error', ajaxResponse.error);
+            }
+            
             var restResponse;
             try {
                 restResponse = JSON.parse(ajaxResponse.response);
@@ -90,10 +94,6 @@ jQuery(function ($) {
 
             if (restResponse && hasRestError(restResponse)) {
                 return addResponse('REST call error', 'response--error', JSON.stringify(restResponse, null, 4));
-            }
-
-            if (ajaxResponse.error) {
-                return addResponse('AJAX error', 'response--error', ajaxResponse.error);
             }
 
             addResponse('Success', 'response--success', JSON.stringify(restResponse, null, 4));

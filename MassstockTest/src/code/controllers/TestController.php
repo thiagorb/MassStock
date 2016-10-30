@@ -98,7 +98,12 @@ class Barcala_MassstockTest_TestController extends Mage_Core_Controller_Front_Ac
 
         if (!$accessToken) {
             $consumer = new Zend_Oauth_Consumer($this->_getParams());
-            $requestToken = $consumer->getRequestToken();
+            try {
+                $requestToken = $consumer->getRequestToken();
+            } catch (Zend_Oauth_Exception $e) {
+                Mage::getSingleton('core/session')->addError($e->getMessage());
+                return $this->_redirect('massstock/test/consumer');
+            }
             $this->_storeRequestToken($requestToken);
             return $consumer->redirect();
         }
@@ -110,7 +115,12 @@ class Barcala_MassstockTest_TestController extends Mage_Core_Controller_Front_Ac
     public function callbackAction()
     {
         $consumer = new Zend_Oauth_Consumer($this->_getParams());
-        $accessToken = $consumer->getAccessToken($_GET, $this->_restoreRequestToken());
+        try {
+            $accessToken = $consumer->getAccessToken($_GET, $this->_restoreRequestToken());
+        } catch (Zend_Oauth_Exception $e) {
+            Mage::getSingleton('core/session')->addError($e->getMessage());
+            return $this->_redirect('massstock/test/consumer');
+        }
         $this->_storeAccessToken($accessToken);
         return $this->_redirect('massstock/test');
     }
