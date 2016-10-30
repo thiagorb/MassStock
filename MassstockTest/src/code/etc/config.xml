@@ -5,7 +5,7 @@
             <version>1.0.0</version>
         </Barcala_MassstockTest>
     </modules>
-    
+
     <global>
         <blocks>
             <barcala_massstocktest>

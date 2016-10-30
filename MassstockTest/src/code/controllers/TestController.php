@@ -89,20 +89,20 @@ class Barcala_MassstockTest_TestController extends Mage_Core_Controller_Front_Ac
 
     public function indexAction() {
         $consumerData = $this->_restoreConsumerData();
-        
+
         if (!$consumerData) {
             return $this->_redirect('massstock/test/consumer');
         }
-        
+
         $accessToken = $this->_restoreAccessToken();
-        
+
         if (!$accessToken) {
             $consumer = new Zend_Oauth_Consumer($this->_getParams());
             $requestToken = $consumer->getRequestToken();
             $this->_storeRequestToken($requestToken);
             return $consumer->redirect();
         }
-    
+
         $this->loadLayout();
         $this->renderLayout();
     }
@@ -114,52 +114,52 @@ class Barcala_MassstockTest_TestController extends Mage_Core_Controller_Front_Ac
         $this->_storeAccessToken($accessToken);
         return $this->_redirect('massstock/test');
     }
-    
+
     public function consumerAction()
     {
         if (
-               !$this->getRequest()->isPost() || 
-               empty($this->getRequest()->getPost('consumer_key')) || 
+               !$this->getRequest()->isPost() ||
+               empty($this->getRequest()->getPost('consumer_key')) ||
                empty($this->getRequest()->getPost('consumer_secret'))
         ) {
             return $this->loadLayout()->renderLayout();
         }
-        
+
         $this->_storeConsumerData([
             'consumerKey'    => $this->getRequest()->getPost('consumer_key'),
             'consumerSecret' => $this->getRequest()->getPost('consumer_secret'),
         ]);
-        
+
         $this->_forgetRequestToken();
         $this->_forgetAccessToken();
-        
+
         return $this->_redirect('massstock/test');
     }
-    
+
     protected function _ajaxRequest()
     {
         $accessToken = $this->_restoreAccessToken();
-        
+
         if (!$accessToken) {
             return [
                 'error' => 'Access token is no longer valid'
             ];
         }
-        
+
         $requestContent = $this->getRequest()->getPost('request_content');
         if (!$requestContent) {
             return [
                 'error' => 'Request body cannot be empty'
             ];
         }
-        
+
         $contentType = $this->getRequest()->getPost('content_type');
         if (array_search($contentType, ['application/json', 'text/csv']) === false) {
             return [
                 'error' => 'Content type is not valid'
             ];
         }
-        
+
         $restClient = $accessToken->getHttpClient($this->_getParams());
         $restClient->setUri($this->_getBaseUrl() . 'api/rest/customstockitems');
         $restClient->setHeaders('Accept', 'application/json');
@@ -169,7 +169,7 @@ class Barcala_MassstockTest_TestController extends Mage_Core_Controller_Front_Ac
         }
         $restClient->setMethod(Zend_Http_Client::PUT);
         $restClient->setRawData($requestContent);
-        
+
         return [
             'response' => $restClient->request()->getBody()
         ];
@@ -180,7 +180,7 @@ class Barcala_MassstockTest_TestController extends Mage_Core_Controller_Front_Ac
         $response = $this->_ajaxRequest();
         $this->getResponse()->setBody(json_encode($response));
     }
-    
+
     protected function _getParams()
     {
         return array_merge(
