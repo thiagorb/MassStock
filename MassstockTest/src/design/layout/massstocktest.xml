@@ -3,6 +3,17 @@
     <barcala_massstocktest_test_index>
         <update handle="page_one_column" />
         
+        <reference name="head">
+            <action method="addItem">
+                <type>skin_js</type>
+                <name>js/massstocktest/form.js</name>
+            </action>
+            <action method="addItem">
+                <type>skin_css</type>
+                <name>css/massstocktest/form.css</name>
+            </action>
+        </reference>
+        
         <reference name="content">
             <block type="core/template" name="massstock_form" as="massstock_form" template="massstocktest/form.phtml">
             </block>
