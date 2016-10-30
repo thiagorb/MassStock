@@ -170,22 +170,8 @@ class Barcala_MassstockTest_TestController extends Mage_Core_Controller_Front_Ac
         $restClient->setMethod(Zend_Http_Client::PUT);
         $restClient->setRawData($requestContent);
         
-        $response = $restClient->request()->getBody();
-        
-        /*
-        Mage::log(
-                [
-                    'request' => $requestContent,
-                    'response' => $response
-                ],
-                null,
-                'ajax_requests.log',
-                true
-                );
-        */
-        
         return [
-            'response' => json_decode($response)
+            'response' => $restClient->request()->getBody()
         ];
     }
 

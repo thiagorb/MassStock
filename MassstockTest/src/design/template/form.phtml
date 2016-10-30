@@ -1,37 +1,10 @@
 <?php
-    /** @var Mage_CatalogInventory_Model_Resource_Stock_Item_Collection $items */
-    $items = Mage::getResourceModel('cataloginventory/stock_item_collection');
-    $items->setPageSize(100)->setCurPage(1);
-    
-    $serializableItems = [];
-    foreach ($items as $item) {
-        $serializableItems[] = [
-            'item_id' => $item->getId(),
-            'qty' => $item->getQty()
-        ];
-    }
-
-    $exampleRequests = [
-        '1 Item by Product ID' => [ 
-            [
-                'product_id' => $item->getProductId(),
-                'stock_id' => $item->getStockId(),
-                'qty' => $item->getQty()
-            ]
-        ],
-        '1 Item by Item ID' => [
-            [
-                'item_id' => $item->getId(),
-                'qty' => $item->getQty()
-            ]
-        ],
-        '100 Items' => $serializableItems
-    ];
+/** @var Barcala_MassstockTest_Block_Form $this */
 ?>
 
 <div class="content-row">
     <div class="content-column content-column--1">
-        <form id="request_form" action="<?php echo Mage::getUrl('massstock/test/callAjax') ?>" method="post">
+        <form id="request_form" action="<?php echo $this->getPostUrl() ?>" method="post">
             <label>Content Type</label>
             <br />
             <select name="content_type">
@@ -43,7 +16,7 @@
             
             <label>Example Request</label>
             <br />
-            <?php foreach ($exampleRequests as $label => $request): ?>
+            <?php foreach ($this->getExampleRequests() as $label => $request): ?>
                 <button data-request-button="<?php echo $label ?>" class="button">
                     <span><span><?php echo $label ?></span></span>
                 </button>
@@ -70,5 +43,5 @@
 </div>
 
 <script type="application/json" id="example-requests">
-    <?php echo json_encode($exampleRequests) ?>
+    <?php echo json_encode($this->getExampleRequests()) ?>
 </script>

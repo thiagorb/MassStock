@@ -15,7 +15,7 @@
         </reference>
         
         <reference name="content">
-            <block type="core/template" name="massstock_form" as="massstock_form" template="massstocktest/form.phtml">
+            <block type="barcala_massstocktest/form" name="massstock_form" as="massstock_form" template="massstocktest/form.phtml">
             </block>
         </reference>
     </barcala_massstocktest_test_index>

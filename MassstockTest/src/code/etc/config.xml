@@ -5,6 +5,14 @@
             <version>1.0.0</version>
         </Barcala_MassstockTest>
     </modules>
+    
+    <global>
+        <blocks>
+            <barcala_massstocktest>
+                <class>Barcala_MassstockTest_Block</class>
+            </barcala_massstocktest>
+        </blocks>
+    </global>
 
     <frontend>
         <routers>
