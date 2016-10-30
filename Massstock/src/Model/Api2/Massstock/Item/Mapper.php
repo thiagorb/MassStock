@@ -20,29 +20,25 @@ class Barcala_Massstock_Model_Api2_Massstock_Item_Mapper
     /**
      * Map the requested items to the items loaded from the database
      *
-     * @param array                                    $data        Requested items
-     * @param Mage_CatalogInventory_Model_Stock_Item[] $loadedItems Stock items
-     * @return array[]
+     * @param Barcala_Massstock_Model_Api2_Massstock_Request_Item[] $requestItems Requested items
+     * @param Mage_CatalogInventory_Model_Stock_Item[]              $loadedItems  Stock items
      */
-    public function map(array $data, $loadedItems)
+    public function map($requestItems, $loadedItems)
     {
         $mapByItemId = $this->_mapByItemId($loadedItems);
         $mapByStockAndProductId = $this->_mapByStockAndProductId($loadedItems);
 
         $itemReferences = [];
-        $mapItemQty = [];
 
-        foreach ($data as $index => $itemData) {
-            if (isset($itemData['item_id'])) {
-                $item = $this->_findLoadedItemByItemId($mapByItemId, $itemData['item_id']);
+        foreach ($requestItems as $index => $requestItem) {
+            if ($requestItem->hasItemId()) {
+                $item = $this->_findLoadedItemByItemId($mapByItemId, $requestItem->getItemId());
             } else {
-                if (empty($itemData['stock_id'])) {
-                    $stockId = Mage_CatalogInventory_Model_Stock::DEFAULT_STOCK_ID;
-                } else {
-                    $stockId = $itemData['stock_id'];
-                }
-
-                $item = $this->_findLoadedItemByStockAndProductId($mapByStockAndProductId, $stockId, $itemData['product_id']);
+                $item = $this->_findLoadedItemByStockAndProductId(
+                    $mapByStockAndProductId, 
+                    $requestItem->getStockId(), 
+                    $requestItem->getProductId()
+                );
             }
 
             if (!$item) {
@@ -51,11 +47,7 @@ class Barcala_Massstock_Model_Api2_Massstock_Item_Mapper
 
             if (!isset($itemReferences[$item->getId()])) {
                 $itemReferences[$item->getId()] = [];
-
-                $mapItemQty[$item->getId()] = [
-                    'qty' => $itemData['qty'],
-                    'item' => $item
-                ];
+                $requestItem->setItem($item);
             }
             $itemReferences[$item->getId()][] = $index;
         }
@@ -73,8 +65,6 @@ class Barcala_Massstock_Model_Api2_Massstock_Item_Mapper
                 )
             );
         }
-
-        return $mapItemQty;
     }
 
     /**

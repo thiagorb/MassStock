@@ -19,14 +19,16 @@ extends Barcala_Massstock_Model_Api2_Massstock
             if (!$validator->isValidCollection($data)) {
                 return $this->_fail($validator->getErrors());
             }
+            
+            $requestItems = $this->_transformRequest($data);
 
             /** @var Barcala_Massstock_Model_Api2_Massstock_Item_Loader $itemLoader */
             $itemLoader = Mage::getModel('barcala_massstock/api2_massstock_item_loader');
-            $loadedItems = $itemLoader->load($data);
+            $loadedItems = $itemLoader->load($requestItems);
 
             /** @var Barcala_Massstock_Model_Api2_Massstock_Item_Mapper $itemMapper */
             $itemMapper = Mage::getModel('barcala_massstock/api2_massstock_item_mapper');
-            $mapItemQty = $itemMapper->map($data, $loadedItems);
+            $itemMapper->map($requestItems, $loadedItems);
 
             if (count($itemMapper->getErrors()) > 0) {
                 return $this->_fail($itemMapper->getErrors());
@@ -36,24 +38,18 @@ extends Barcala_Massstock_Model_Api2_Massstock
             $resource = Mage::getSingleton('core/resource');
             $connection = $resource->getConnection('core_write');
             $table = $resource->getTableName('cataloginventory/stock_item');
-            foreach ($mapItemQty as $itemQty) {
-                /** @var Mage_CatalogInventory_Model_Stock_Item $item */
-                $item = $itemQty['item'];
-
-                /** @var int|float|string $qty */
-                $qty = $itemQty['qty'];
-                
+            foreach ($requestItems as $requestItem) {
                 $connection->update(
                     $table,
-                    ['qty' => $itemQty['qty']],
-                    ['item_id = ?' => $item->getId()]
+                    ['qty' => $requestItem->getQty()],
+                    ['item_id = ?' => $requestItem->getItem()->getId()]
                 );
 
                 $this->_successMessage(
                     sprintf(
                         'Updated quantity of stock item with ID %s to %s', 
-                        $item->getId(),
-                        $qty
+                        $requestItem->getItem()->getId(),
+                        $requestItem->getQty()
                     ),
                     self::RESOURCE_UPDATED_SUCCESSFUL
                 );
@@ -87,5 +83,22 @@ extends Barcala_Massstock_Model_Api2_Massstock
         foreach ($errors as $error) {
             $this->_errorMessage($error, self::RESOURCE_DATA_PRE_VALIDATION_ERROR);
         }
+    }
+    
+    /**
+     * Transform array of requested items
+     * 
+     * @param array $data
+     * @return Barcala_Massstock_Model_Api2_Massstock_Request_Item[]
+     */
+    protected function _transformRequest($data)
+    {
+        $items = [];
+        
+        foreach ($data as $itemData) {
+            $items[] = Mage::getModel('barcala_massstock/api2_massstock_request_item', $itemData);
+        }
+        
+        return $items;
     }
 }

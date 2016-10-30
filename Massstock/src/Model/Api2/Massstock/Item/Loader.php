@@ -15,28 +15,22 @@ class Barcala_Massstock_Model_Api2_Massstock_Item_Loader
     /**
      * Load items that match requested items
      *
-     * @param array $data
+     * @param Barcala_Massstock_Model_Api2_Massstock_Request_Item[] $requestItems Requested items
      * @return Mage_CatalogInventory_Model_Stock_Item[]
      */
-    public function load(array $data)
+    public function load($requestItems)
     {
         $conditions = [];
 
-        foreach ($data as $index => $itemData) {
-            if (isset($itemData['item_id'])) {
-                $conditions[] = $this->_makeCondition('item_id', $itemData['item_id']);
+        foreach ($requestItems as $index => $requestItem) {
+            if ($requestItem->hasItemId()) {
+                $conditions[] = $this->_makeCondition('item_id', $requestItem->getItemId());
                 continue;
             }
 
-            if (isset($itemData['stock_id'])) {
-                $stockId = $itemData['stock_id'];
-            } else {
-                $stockId = Mage_CatalogInventory_Model_Stock::DEFAULT_STOCK_ID;
-            }
-
             $conditions[] = $this->_conjunction([
-                $this->_makeCondition('stock_id', $stockId),
-                $this->_makeCondition('product_id', $itemData['product_id'])
+                $this->_makeCondition('stock_id', $requestItem->getStockId()),
+                $this->_makeCondition('product_id', $requestItem->getProductId())
             ]);
         }
 
@@ -44,13 +38,7 @@ class Barcala_Massstock_Model_Api2_Massstock_Item_Loader
         $collection = Mage::getResourceModel('cataloginventory/stock_item_collection');
         $collection->getSelect()->where($this->_disjunction($conditions));
 
-        $items = [];
-        foreach ($collection as $item) {
-            /** @var Mage_CatalogInventory_Model_Stock_Item $item */
-            $items[] = $item;
-        }
-
-        return $items;
+        return $collection->getItems();
     }
 
     /**
