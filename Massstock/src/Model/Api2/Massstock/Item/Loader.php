@@ -77,10 +77,10 @@ class Barcala_Massstock_Model_Api2_Massstock_Item_Loader
     }
 
     /**
-     * Combine given conditions with an OR operator
+     * Wrap conditions with '(' ')'
      *
      * @param string[] $conditions Conditions
-     * @return string
+     * @return string[]
      */
     protected function _wrap($conditions)
     {
